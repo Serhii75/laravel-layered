@@ -1,0 +1,57 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Generic\AbstractService;
+use NamespaceDummyRepository;
+use NamespaceDummyServiceInterface;
+
+class DummyClass extends AbstractService implements DummyServiceInterface
+{
+    /**
+     * DummyClass constructor.
+     *
+     * @param DummyRepository $repository
+     */
+    public function __construct(DummyRepository $repository)
+    {
+        parent::__construct($repository);
+    }
+
+    /**
+     * Store a newly created resource.
+     *
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    public function create(array $attributes)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource.
+     *
+     * @param int   $id
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    public function update(int $id, array $attributes)
+    {
+        //
+    }
+
+    /**
+     * Destroy the specified resource.
+     *
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function delete(int $id)
+    {
+        //
+    }
+}

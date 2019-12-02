@@ -1,0 +1,30 @@
+{
+    "name": "sidev/laravel-layered",
+    "description": "Package for using layered sturcture in Laravel.",
+    "keywords": [
+        "laravel layered structure",
+        "laravel layered architecture",
+        "laravel service layer",
+        "laravel repository layer"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Serhii Ivanenko",
+            "email": "serhii.ivanenko@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "SiDev\\LaravelLayered\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SiDev\\LaravelLayered\\LayeredServiceProvider"
+            ]
+        }
+    }
+}

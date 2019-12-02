@@ -1,0 +1,61 @@
+<?php
+
+namespace DummyNamespace;
+
+use NamespaceDummyModel;
+use NamespaceDummyServiceInterface;
+
+class DummyClass implements DummyServiceInterface
+{
+    /**
+     * @var DummyModel
+     */
+    protected $model;
+
+    /**
+     * DummyClass constructor.
+     *
+     * @param DummyModel $model
+     */
+    public function __construct(DummyModel $model)
+    {
+        $this->model = $model;
+    }
+
+    /**
+     * Store a newly created resource.
+     *
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    public function create(array $attributes)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource.
+     *
+     * @param int   $id
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    public function update(int $id, array $attributes)
+    {
+        //
+    }
+
+    /**
+     * Destroy the specified resource.
+     *
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function delete(int $id)
+    {
+        //
+    }
+}

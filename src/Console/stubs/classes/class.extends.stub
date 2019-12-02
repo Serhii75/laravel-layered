@@ -1,0 +1,16 @@
+<?php
+
+namespace DummyNamespace;
+
+use NamespaceDummyExtends;
+
+class DummyClass extends DummyExtends
+{
+    /**
+     * DummyClass constructor.
+     */
+    public function __construct()
+    {
+        //
+    }
+}

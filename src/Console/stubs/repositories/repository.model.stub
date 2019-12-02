@@ -1,0 +1,19 @@
+<?php
+
+namespace DummyNamespace;
+
+use NamespaceDummyModel;
+use SiDev\LaravelLayered\Repositories\Eloquent\EloquentRepository;
+
+class DummyClass extends EloquentRepository
+{
+    /**
+     * DummyClass constructor.
+     *
+     * @param DummyModel $model
+     */
+    public function __construct(DummyModel $model)
+    {
+        parent::__construct($model);
+    }
+}

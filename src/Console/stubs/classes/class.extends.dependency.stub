@@ -1,0 +1,24 @@
+<?php
+
+namespace DummyNamespace;
+
+use NamespaceDummyExtends;
+use NamespaceDummyDependency;
+
+class DummyClass extends DummyExtends
+{
+    /**
+     * @var DummyDependency
+     */
+    protected $DummyVariableName;
+
+    /**
+     * DummyClass constructor.
+     *
+     * @param DummyDependency $DummyVariableName
+     */
+    public function __construct(DummyDependency $DummyVariableName)
+    {
+        $this->DummyVariableName = $DummyVariableName;
+    }
+}
