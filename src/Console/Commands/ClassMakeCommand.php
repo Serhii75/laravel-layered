@@ -72,7 +72,7 @@ class ClassMakeCommand extends GeneratorCommand
      */
     protected function buildClassExtendsDependencyContract(string $name)
     {
-        return str_replace(
+        $stub = str_replace(
             [
                 'NamespaceDummyExtends',
                 'DummyExtends',
@@ -93,6 +93,12 @@ class ClassMakeCommand extends GeneratorCommand
             ],
             parent::buildClass($name)
         );
+
+        return $this->cleanBuiltClassFromUseless($name, $stub, [
+            $namespaceExtends,
+            $namespaceDependency,
+            $namespaceDependency,
+        ]);
     }
 
     /**
@@ -106,7 +112,7 @@ class ClassMakeCommand extends GeneratorCommand
      */
     protected function buildClassExtendsDependency(string $name)
     {
-        return str_replace(
+        $stub = str_replace(
             [
                 'NamespaceDummyExtends',
                 'DummyExtends',
@@ -123,6 +129,11 @@ class ClassMakeCommand extends GeneratorCommand
             ],
             parent::buildClass($name)
         );
+
+        return $this->cleanBuiltClassFromUseless($name, $stub, [
+            $namespaceExtends,
+            $namespaceDependency,
+        ]);
     }
 
     /**
@@ -136,7 +147,7 @@ class ClassMakeCommand extends GeneratorCommand
      */
     protected function buildClassExtendsContract(string $name)
     {
-        return str_replace(
+        $stub = str_replace(
             [
                 'NamespaceDummyExtends',
                 'DummyExtends',
@@ -151,6 +162,11 @@ class ClassMakeCommand extends GeneratorCommand
             ],
             parent::buildClass($name)
         );
+
+        return $this->cleanBuiltClassFromUseless($name, $stub, [
+            $namespaceExtends,
+            $namespaceContract,
+        ]);
     }
 
     /**
@@ -164,7 +180,7 @@ class ClassMakeCommand extends GeneratorCommand
      */
     protected function buildClassDependencyContract($name)
     {
-        return str_replace(
+        $stub = str_replace(
             [
                 'NamespaceDummyDependency',
                 'DummyDependency',
@@ -181,6 +197,11 @@ class ClassMakeCommand extends GeneratorCommand
             ],
             parent::buildClass($name)
         );
+
+        return $this->cleanBuiltClassFromUseless($name, $stub, [
+            $namespaceDependency,
+            $namespaceContract,
+        ]);
     }
 
     /**
@@ -196,11 +217,13 @@ class ClassMakeCommand extends GeneratorCommand
     {
         $namespaceExtends = $this->qualifyClass($this->option('extends'));
 
-        return str_replace(
+        $stub = str_replace(
             ['NamespaceDummyExtends', 'DummyExtends'],
             [$namespaceExtends, class_basename($namespaceExtends)],
             parent::buildClass($name)
         );
+
+        return $this->cleanBuiltClassFromUseless($name, $stub, [$namespaceExtends]);
     }
 
     /**
@@ -217,11 +240,13 @@ class ClassMakeCommand extends GeneratorCommand
         $namespaceDependency = $this->qualifyClass($this->option('dependency'));
         $dependencyClass = class_basename($namespaceDependency);
 
-        return str_replace(
+        $stub = str_replace(
             ['NamespaceDummyDependency', 'DummyDependency', 'DummyVariableName'],
             [$namespaceDependency, $dependencyClass, $this->getDependencyName($dependencyClass)],
             parent::buildClass($name)
         );
+
+        return $this->cleanBuiltClassFromUseless($name, $stub, [$namespaceDependency]);
     }
 
     /**
@@ -237,11 +262,13 @@ class ClassMakeCommand extends GeneratorCommand
     {
         $namespaceContract = $this->getContractNamespace();
 
-        return str_replace(
+        $stub = str_replace(
             ['NamespaceDummyContract', 'DummyContract'],
             [$namespaceContract, class_basename($namespaceContract)],
             parent::buildClass($name)
         );
+
+        return $this->cleanBuiltClassFromUseless($name, $stub, [$namespaceContract]);
     }
 
     /**
@@ -279,7 +306,7 @@ class ClassMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Create the contract by given namaspace.
+     * Create the contract by given namespace.
      *
      * @param string $namespace
      */
@@ -312,6 +339,41 @@ class ClassMakeCommand extends GeneratorCommand
         }
 
         return $result;
+    }
+
+    /**
+     * Remove useless 'use' namespaces from the stub.
+     *
+     * @param string $name
+     * @param string $stub
+     * @param array  $uses
+     *
+     * @return string
+     */
+    protected function cleanBuiltClassFromUseless(string $name, string $stub, array $uses)
+    {
+        $namespace = $this->getNamespace($name);
+
+        foreach ($uses as $use) {
+            if ($namespace === $this->getNamespace($use)) {
+                $stub = $this->removeUselessUse($stub, $use);
+            }
+        }
+
+        return $stub;
+    }
+
+    /**
+     * Remove useless 'use' directive from stub.
+     *
+     * @param string $stub
+     * @param string $useNamespace
+     *
+     * @return string
+     */
+    protected function removeUselessUse(string $stub, string $useNamespace)
+    {
+        return str_replace("use $useNamespace;\n", '', $stub);
     }
 
     /**

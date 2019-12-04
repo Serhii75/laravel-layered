@@ -3,9 +3,9 @@
 namespace SiDev\LaravelLayered\Console\Commands;
 
 use Illuminate\Support\Str;
-use SiDev\LaravelLayered\Traits\Commands\SortableImport;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
+use SiDev\LaravelLayered\Traits\Commands\SortableImport;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class RepositoryMakeCommand extends GeneratorCommand
@@ -34,11 +34,71 @@ class RepositoryMakeCommand extends GeneratorCommand
     protected $type = 'Repository';
 
     /**
+     * The default parent fully qualified class name.
+     *
+     * @var string
+     */
+    protected $defaultParent = 'App\Repositories\Eloquent\EloquentRepository';
+
+    /**
      * The contract to implement if it passed as an option.
      *
      * @var string
      */
     protected $contract = '';
+
+    /**
+     * Execute the console command.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        if ($this->option('contract')) {
+            $this->createContract();
+        }
+
+        $this->createClass();
+
+        $this->info($this->type.' created successfully.');
+    }
+
+    /**
+     * Create the class by the given parameters.
+     */
+    public function createClass()
+    {
+        $name = 'Repositories/'.$this->argument('name');
+
+        $params = ['name' => $name];
+
+        if ($this->option('contract')) {
+            $params = array_merge($params, ['--contract' => $this->contract]);
+        }
+
+        if ($model = $this->option('model')) {
+            $params = array_merge($params, [
+                '--dependency' => $model,
+                '--dependencyName' => 'model',
+            ]);
+        }
+
+        $params = array_merge($params, ['--extends' => $this->getExtendsName()]);
+
+        $this->call('make:class', $params);
+    }
+
+    /**
+     * Get the extends' fully qualified class name.
+     *
+     * @return string
+     */
+    protected function getExtendsName()
+    {
+        return $this->option('extends')
+            ? $this->qualifyClass($this->option('extends'))
+            : $this->defaultParent;
+    }
 
     /**
      * Get the stub file for the generator.
@@ -47,112 +107,7 @@ class RepositoryMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        $stub = __DIR__.'/../stubs/repositories/repository';
-
-        if ($this->option('model')) {
-            $stub .= '.model';
-        }
-
-        if ($this->option('contract')) {
-            $stub .= '.contract';
-        }
-
-        return $stub.'.stub';
-    }
-
-    /**
-     * Build the class with the given name.
-     *
-     * @param string $name
-     *
-     * @throws FileNotFoundException
-     *
-     * @return string
-     */
-    protected function buildClass($name)
-    {
-        if ($this->option('model') && $this->option('contract')) {
-            return $this->buildClassWithDependencyAndContract($name);
-        }
-
-        if ($this->option('model')) {
-            return $this->buildClassWithDependency($name);
-        }
-
-        if ($this->option('contract')) {
-            return $this->buildClassWithContract($name);
-        }
-
-        return parent::buildClass($name);
-    }
-
-    /**
-     * Build the class with contract and injected dependency.
-     *
-     * @param string $name
-     *
-     * @throws FileNotFoundException
-     *
-     * @return mixed
-     */
-    protected function buildClassWithDependencyAndContract(string $name)
-    {
-        $this->createContract();
-
-        return str_replace(
-            [
-                'NamespaceDummyModel',
-                'DummyModel',
-                'NamespaceDummyRepositoryInterface',
-                'DummyRepositoryInterface',
-            ],
-            [
-                $namespaceModel = $this->getDependencyNamespace(),
-                class_basename($namespaceModel),
-                $namespaceContract = $this->rootNamespace().'Contracts\\'.$this->contract,
-                class_basename($namespaceContract),
-            ],
-            parent::buildClass($name)
-        );
-    }
-
-    /**
-     * Build the class with injected dependency.
-     *
-     * @param string $name
-     *
-     * @throws FileNotFoundException
-     *
-     * @return mixed
-     */
-    protected function buildClassWithDependency(string $name)
-    {
-        return str_replace(
-            ['NamespaceDummyModel', 'DummyModel'],
-            [$namespaceModel = $this->getDependencyNamespace(), class_basename($namespaceModel)],
-            parent::buildClass($name)
-        );
-    }
-
-    /**
-     * Build the class that implements contract.
-     *
-     * @param string $name
-     *
-     * @throws FileNotFoundException
-     *
-     * @return mixed
-     */
-    protected function buildClassWithContract(string $name)
-    {
-        $this->createContract();
-        $namespaceContract = $this->rootNamespace().'Contracts\\'.$this->contract;
-
-        return str_replace(
-            ['NamespaceDummyRepositoryInterface', 'DummyRepositoryInterface'],
-            [$namespaceContract, class_basename($namespaceContract)],
-            parent::buildClass($name)
-        );
+        return '';
     }
 
     /**
@@ -171,30 +126,6 @@ class RepositoryMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the default namespace for the class.
-     *
-     * @param string $rootNamespace
-     *
-     * @return string
-     */
-    protected function getDefaultNamespace($rootNamespace)
-    {
-        return $rootNamespace.'\Repositories';
-    }
-
-    /**
-     * Get the dependency namespace.
-     *
-     * @return mixed|string
-     */
-    protected function getDependencyNamespace()
-    {
-        return $this->option('model')
-            ? str_replace('/', '\\', trim($this->rootNamespace(), '\\').'\\'.$this->option('model'))
-            : 'Illuminate\Database\Eloquent\Model';
-    }
-
-    /**
      * Get the console command options.
      *
      * @return array
@@ -202,7 +133,8 @@ class RepositoryMakeCommand extends GeneratorCommand
     protected function getOptions()
     {
         return [
-            ['model', 'm', InputOption::VALUE_OPTIONAL, 'The name of the model'],
+            ['extends', 'e', InputOption::VALUE_REQUIRED, 'The name of the extended class'],
+            ['model', 'm', InputOption::VALUE_REQUIRED, 'The name of the injected model'],
             ['contract', 'c', InputOption::VALUE_NONE, 'Create a new contract for the repository class'],
         ];
     }
