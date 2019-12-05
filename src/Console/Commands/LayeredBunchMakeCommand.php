@@ -61,6 +61,7 @@ class LayeredBunchMakeCommand extends GeneratorCommand
             'name' => "{$model}Repository",
             '--model' => $model,
             '--contract' => null,
+            '--extends' => null,
         ]);
     }
 
@@ -72,6 +73,7 @@ class LayeredBunchMakeCommand extends GeneratorCommand
             'name' => "{$model}Service",
             '--repository' => "{$model}RepositoryInterface",
             '--contract' => null,
+            '--extends' => null,
         ]);
     }
 
