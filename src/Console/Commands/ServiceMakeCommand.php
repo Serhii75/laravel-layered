@@ -41,35 +41,16 @@ class ServiceMakeCommand extends GeneratorCommand
     protected $contract = '';
 
     /**
-     * Get the stub file for the generator.
+     * The default parent fully qualified class name.
      *
-     * @return string
+     * @var string
      */
-    protected function getStub()
-    {
-        $stub = __DIR__.'/../stubs/services/service';
-
-        if ($this->option('model')) {
-            $stub .= '.model';
-        }
-
-        if ($this->option('repository')) {
-            $stub .= '.repository';
-        }
-
-        if ($this->option('contract')) {
-            $stub .= '.contract';
-        }
-
-        return $stub.'.stub';
-    }
+    protected $defaultParent = 'App\Generic\AbstractService';
 
     /**
      * Execute the console command.
      *
-     * @throws FileNotFoundException
-     *
-     * @return bool|null
+     * @return bool|void
      */
     public function handle()
     {
@@ -79,127 +60,69 @@ class ServiceMakeCommand extends GeneratorCommand
             return false;
         }
 
-        return parent::handle();
+        if ($this->option('contract')) {
+            $this->createContract();
+        }
+
+        $this->createClass();
+
+        $this->info($this->type.' created successfully.');
     }
 
     /**
-     * Build the class with the given name.
-     *
-     * @param string $name
-     *
-     * @throws FileNotFoundException
+     * Create the class by the given parameters.
+     */
+    protected function createClass()
+    {
+        $name = 'Services/'.$this->argument('name');
+
+        $params = ['name' => $name];
+
+        if ($this->option('contract')) {
+            $params = array_merge($params, ['--contract' => $this->contract]);
+        }
+
+        if ($model = $this->option('model')) {
+            $params = array_merge($params, [
+                '--dependency' => $model,
+                '--dependencyName' => 'model',
+            ]);
+        }
+
+        if ($repository = $this->option('repository')) {
+            $params = array_merge($params, [
+                '--dependency' => $this->getRepositoryNamespace($repository),
+                '--dependencyName' => 'repository',
+            ]);
+        }
+
+        if (false !== $this->option('extends')) {
+            $params = array_merge($params, ['--extends' => $this->getExtendsName()]);
+        }
+
+        $this->call('make:class', $params);
+    }
+
+    /**
+     * Get the stub file for the generator.
      *
      * @return string
      */
-    protected function buildClass($name)
+    protected function getStub()
     {
-        if ($this->option('model') && $this->option('contract')) {
-            return $this->buildClassWithModelAndContract($name);
-        }
-
-        if ($this->option('model')) {
-            return $this->buildClassWithModel($name);
-        }
-
-        if ($this->option('repository') && $this->option('contract')) {
-            return $this->buildClassWithRepositoryAndContract($name);
-        }
-
-        if ($this->option('repository')) {
-            return $this->buildClassWithRepository($name);
-        }
-
-        return parent::buildClass($name);
+        return '';
     }
 
     /**
-     * @param string $name
+     * Get the extends' fully qualified class name.
      *
-     * @throws FileNotFoundException
-     *
-     * @return mixed
+     * @return string
      */
-    protected function buildClassWithModel(string $name)
+    protected function getExtendsName()
     {
-        return str_replace(
-            ['NamespaceDummyModel', 'DummyModel'],
-            [$namespaceModel = $this->getModelNamespace(), class_basename($namespaceModel)],
-            parent::buildClass($name)
-        );
-    }
-
-    /**
-     * @param string $name
-     *
-     * @throws FileNotFoundException
-     *
-     * @return mixed
-     */
-    protected function buildClassWithRepository(string $name)
-    {
-        return str_replace(
-            ['NamespaceDummyRepository', 'DummyRepository'],
-            [$namespaceRepo = $this->getRepositoryNamespace(), class_basename($namespaceRepo)],
-            parent::buildClass($name)
-        );
-    }
-
-    /**
-     * @param string $name
-     *
-     * @throws FileNotFoundException
-     *
-     * @return mixed
-     */
-    protected function buildClassWithModelAndContract(string $name)
-    {
-        $this->createContract();
-
-        return str_replace(
-            [
-                'NamespaceDummyModel',
-                'DummyModel',
-                'NamespaceDummyServiceInterface',
-                'DummyServiceInterface',
-            ],
-            [
-                $namespaceModel = $this->getModelNamespace(),
-                class_basename($namespaceModel),
-                $namespaceContract = $this->rootNamespace().'Contracts\\'.$this->contract,
-                class_basename($namespaceContract),
-            ],
-            parent::buildClass($name)
-        );
-    }
-
-    /**
-     * Build the class that implements interface.
-     *
-     * @param string $name
-     *
-     * @throws FileNotFoundException
-     *
-     * @return mixed
-     */
-    protected function buildClassWithRepositoryAndContract(string $name)
-    {
-        $this->createContract();
-
-        return str_replace(
-            [
-                'NamespaceDummyRepository',
-                'DummyRepository',
-                'NamespaceDummyServiceInterface',
-                'DummyServiceInterface',
-            ],
-            [
-                $namespaceRepo = $this->getRepositoryNamespace(),
-                class_basename($namespaceRepo),
-                $namespaceContract = $this->rootNamespace().'Contracts\\'.$this->contract,
-                class_basename($namespaceContract),
-            ],
-            parent::buildClass($name)
-        );
+        return $this->option('extends')
+            ? $this->qualifyClass($this->option('extends'))
+            : $this->defaultParent;
     }
 
     /**
@@ -218,41 +141,19 @@ class ServiceMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the default namespace for the class.
-     *
-     * @param string $rootNamespace
-     *
-     * @return string
-     */
-    protected function getDefaultNamespace($rootNamespace)
-    {
-        return $rootNamespace.'\Services';
-    }
-
-    /**
-     * Get the model namespace.
-     *
-     * @return string
-     */
-    protected function getModelNamespace()
-    {
-        return $this->option('model')
-            ? str_replace('/', '\\', trim($this->rootNamespace(), '\\').'\\'.$this->option('model'))
-            : 'Illuminate\Database\Eloquent\Model';
-    }
-
-    /**
      * Get the repository namespace.
      *
      * @return string
      */
-    protected function getRepositoryNamespace()
+    protected function getRepositoryNamespace(string $repository)
     {
-        $prefix = Str::endsWith($name = $this->option('repository'), 'Interface')
+        $prefix = Str::endsWith($repository, 'Interface')
             ? 'Contracts\Repositories\\'
             : 'Repositories\\';
 
-        return str_replace('/', '\\', trim($this->rootNamespace(), '\\').'\\'.$prefix.$name);
+        return str_replace(
+            '/', '\\', trim($this->rootNamespace(), '\\').'\\'.$prefix.$repository
+        );
     }
 
     /**
@@ -263,6 +164,7 @@ class ServiceMakeCommand extends GeneratorCommand
     protected function getOptions()
     {
         return [
+            ['extends', 'e', InputOption::VALUE_OPTIONAL, 'The name of the extended class', false],
             ['model', 'm', InputOption::VALUE_OPTIONAL, 'The name of the injected model'],
             ['repository', 'r', InputOption::VALUE_OPTIONAL, 'The name of the injected repository'],
             ['contract', 'c', InputOption::VALUE_NONE, 'Create a new contract for the service class'],

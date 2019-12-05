@@ -83,7 +83,9 @@ class RepositoryMakeCommand extends GeneratorCommand
             ]);
         }
 
-        $params = array_merge($params, ['--extends' => $this->getExtendsName()]);
+        if (false !== $this->option('extends')) {
+            $params = array_merge($params, ['--extends' => $this->getExtendsName()]);
+        }
 
         $this->call('make:class', $params);
     }
@@ -133,7 +135,7 @@ class RepositoryMakeCommand extends GeneratorCommand
     protected function getOptions()
     {
         return [
-            ['extends', 'e', InputOption::VALUE_REQUIRED, 'The name of the extended class'],
+            ['extends', 'e', InputOption::VALUE_OPTIONAL, 'The name of the extended class', false],
             ['model', 'm', InputOption::VALUE_REQUIRED, 'The name of the injected model'],
             ['contract', 'c', InputOption::VALUE_NONE, 'Create a new contract for the repository class'],
         ];
