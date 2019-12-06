@@ -20,6 +20,6 @@ class DummyClass extends DummyExtends implements DummyContract
      */
     public function __construct(DummyDependency $DummyVariableName)
     {
-        $this->DummyVariableName = $DummyVariableName;
+        parent::__construct($DummyVariableName);
     }
 }

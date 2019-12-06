@@ -83,7 +83,7 @@ class ClassMakeCommand extends GeneratorCommand
                 'DummyContract',
             ],
             [
-                $namespaceExtends = $this->qualifyClass($this->option('extends')),
+                $namespaceExtends = $this->getExtendsNamespace(),
                 class_basename($namespaceExtends),
                 $namespaceDependency = $this->qualifyClass($this->option('dependency')),
                 $dependencyClass = class_basename($namespaceDependency),
@@ -121,7 +121,7 @@ class ClassMakeCommand extends GeneratorCommand
                 'DummyVariableName',
             ],
             [
-                $namespaceExtends = $this->qualifyClass($this->option('extends')),
+                $namespaceExtends = $this->getExtendsNamespace(),
                 class_basename($namespaceExtends),
                 $namespaceDependency = $this->qualifyClass($this->option('dependency')),
                 $dependencyClass = class_basename($namespaceDependency),
@@ -155,7 +155,7 @@ class ClassMakeCommand extends GeneratorCommand
                 'DummyContract',
             ],
             [
-                $namespaceExtends = $this->qualifyClass($this->option('extends')),
+                $namespaceExtends = $this->getExtendsNamespace(),
                 class_basename($namespaceExtends),
                 $namespaceContract = $this->getContractNamespace(),
                 class_basename($namespaceContract),
@@ -215,7 +215,7 @@ class ClassMakeCommand extends GeneratorCommand
      */
     protected function buildClassExtends(string $name)
     {
-        $namespaceExtends = $this->qualifyClass($this->option('extends'));
+        $namespaceExtends = $this->getExtendsNamespace();
 
         $stub = str_replace(
             ['NamespaceDummyExtends', 'DummyExtends'],
@@ -287,6 +287,20 @@ class ClassMakeCommand extends GeneratorCommand
         }
 
         return $namespace;
+    }
+
+    /**
+     * Get extends namespace.
+     *
+     * @return string
+     */
+    protected function getExtendsNamespace()
+    {
+        $extends = $this->option('extends');
+
+        return Str::startsWith($extends, 'SiDev')
+            ? str_replace('/', '\\', $extends)
+            : $this->qualifyClass($extends);
     }
 
     /**

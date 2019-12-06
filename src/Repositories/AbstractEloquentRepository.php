@@ -1,11 +1,11 @@
 <?php
 
-namespace SiDev\LaravelLayered\Repositories\Eloquent;
+namespace SiDev\LaravelLayered\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
-use SiDev\LaravelLayered\Contracts\RepositoryInterface;
+use SiDev\LaravelLayered\Contracts\Repositories\RepositoryInterface;
 
-abstract class EloquentRepository implements RepositoryInterface
+abstract class AbstractEloquentRepository implements RepositoryInterface
 {
     /**
      * @var Model

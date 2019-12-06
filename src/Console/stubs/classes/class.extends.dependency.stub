@@ -19,6 +19,6 @@ class DummyClass extends DummyExtends
      */
     public function __construct(DummyDependency $DummyVariableName)
     {
-        $this->DummyVariableName = $DummyVariableName;
+        parent::__construct($DummyVariableName);
     }
 }

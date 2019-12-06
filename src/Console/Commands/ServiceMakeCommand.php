@@ -3,9 +3,9 @@
 namespace SiDev\LaravelLayered\Console\Commands;
 
 use Illuminate\Support\Str;
-use SiDev\LaravelLayered\Traits\Commands\SortableImport;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
+use SiDev\LaravelLayered\Traits\Commands\SortableImport;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class ServiceMakeCommand extends GeneratorCommand
@@ -45,7 +45,7 @@ class ServiceMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $defaultParent = 'App\Generic\AbstractService';
+    protected $defaultParent = 'SiDev\LaravelLayered\Services\AbstractService';
 
     /**
      * Execute the console command.
@@ -136,7 +136,7 @@ class ServiceMakeCommand extends GeneratorCommand
 
         $this->call('make:contract', [
             'name' => $this->contract,
-            '--extends' => 'Services/ServiceInterface',
+            '--extends' => 'SiDev/LaravelLayered/Contracts/Services/ServiceInterface',
         ]);
     }
 

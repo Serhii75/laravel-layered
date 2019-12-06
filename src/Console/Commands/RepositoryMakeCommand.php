@@ -38,7 +38,7 @@ class RepositoryMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $defaultParent = 'App\Repositories\Eloquent\EloquentRepository';
+    protected $defaultParent = 'SiDev\LaravelLayered\Repositories\AbstractEloquentRepository';
 
     /**
      * The contract to implement if it passed as an option.
@@ -123,7 +123,7 @@ class RepositoryMakeCommand extends GeneratorCommand
 
         $this->call('make:contract', [
             'name' => $this->contract,
-            '--extends' => 'Repositories/RepositoryInterface',
+            '--extends' => 'SiDev/LaravelLayered/Contracts/Repositories/RepositoryInterface',
         ]);
     }
 
