@@ -29,6 +29,10 @@ class LayeredServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->publishes([
+            __DIR__.'/../config/layered.php' => config_path('layered.php'),
+        ], 'config');
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 ClassMakeCommand::class,

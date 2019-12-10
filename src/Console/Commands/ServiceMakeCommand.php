@@ -122,7 +122,7 @@ class ServiceMakeCommand extends GeneratorCommand
     {
         return $this->option('extends')
             ? $this->qualifyClass($this->option('extends'))
-            : $this->defaultParent;
+            : config('layered.service.base_class');
     }
 
     /**
@@ -136,7 +136,7 @@ class ServiceMakeCommand extends GeneratorCommand
 
         $this->call('make:contract', [
             'name' => $this->contract,
-            '--extends' => 'SiDev/LaravelLayered/Contracts/Services/ServiceInterface',
+            '--extends' => config('layered.service.contract'),
         ]);
     }
 

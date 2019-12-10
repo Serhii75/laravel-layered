@@ -99,7 +99,7 @@ class RepositoryMakeCommand extends GeneratorCommand
     {
         return $this->option('extends')
             ? $this->qualifyClass($this->option('extends'))
-            : $this->defaultParent;
+            : config('layered.repository.base_class');
     }
 
     /**
@@ -123,7 +123,7 @@ class RepositoryMakeCommand extends GeneratorCommand
 
         $this->call('make:contract', [
             'name' => $this->contract,
-            '--extends' => 'SiDev/LaravelLayered/Contracts/Repositories/RepositoryInterface',
+            '--extends' => config('layered.repository.contract'),
         ]);
     }
 
