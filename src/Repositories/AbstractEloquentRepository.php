@@ -95,9 +95,9 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
      */
     public function update($id, array $attributes)
     {
-        $model = $this->model->findOrFail($id);
-
-        return tap($model->update($attributes));
+        return tap($this->model->findOrFail($id), function ($model) use ($attributes) {
+            $model->update($attributes);
+        });
     }
 
     /**
@@ -110,7 +110,9 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
      */
     public function updateWhere(array $where, array $attributes)
     {
-        return $this->applyWhere($where)->update($attributes);
+        $this->applyWhere($where)->update($attributes);
+
+        return $this->applyWhere($where)->get();
     }
 
     /**
