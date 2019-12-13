@@ -25,11 +25,52 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Get collection of the resource.
      *
+     * @param  array  $columns
+     *
      * @return mixed
      */
-    public function get()
+    public function get($columns = ['*'])
     {
-        return $this->model->get();
+        return $this->model->get($columns);
+    }
+
+    /**
+     * Find a resource by its primary key.
+     *
+     * @param  mixed  $id
+     * @param  array  $columns
+     *
+     * @return mixed
+     */
+    public function find($id, array $columns = ['*'])
+    {
+        return $this->model->find($id, $columns);
+    }
+
+    /**
+     * Get collection of resources by the specified condition(s).
+     *
+     * @param  array  $where
+     * @param  array  $columns
+     *
+     * @return mixed
+     */
+    public function findWhere(array $where, array $columns = ['*'])
+    {
+        return $this->applyWhere($where)->get($columns);
+    }
+
+    /**
+     * Get a resource by the specified condition(s).
+     *
+     * @param  array  $where
+     * @param  array  $columns
+     *
+     * @return mixed
+     */
+    public function firstWhere(array $where, $columns = ['*'])
+    {
+        return $this->applyWhere($where)->first($columns);
     }
 
     /**
@@ -60,6 +101,19 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     }
 
     /**
+     * Update resources by the specified condition(s).
+     *
+     * @param  array  $where
+     * @param  array  $attributes
+     *
+     * @return mixed
+     */
+    public function updateWhere(array $where, array $attributes)
+    {
+        return $this->applyWhere($where)->update($attributes);
+    }
+
+    /**
      * Delete the specified resource.
      *
      * @param  mixed  $id
@@ -67,6 +121,18 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     public function delete($id)
     {
         $this->model->where('id', $id)->delete();
+    }
+
+    /**
+     * Delete resources by the specified condition(s).
+     *
+     * @param  array  $where
+     *
+     * @return mixed
+     */
+    public function deleteWhere(array $where)
+    {
+        return $this->applyWhere($where)->delete();
     }
 
     /**
@@ -78,5 +144,37 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     public function __call($method, $arguments)
     {
         return $this->model->$method(...$arguments);
+    }
+
+    /**
+     * Apply 'where' condition(s) to the model.
+     *
+     * @param  array  $where
+     *
+     * @return mixed
+     */
+    protected function applyWhere(array $where)
+    {
+        return $this->containsArraysOnly($where)
+            ? $this->model->where($where)
+            : $this->model->where(...$where);
+    }
+
+    /**
+     * Cehck whether all elements are arrays.
+     *
+     * @param  array  $data
+     *
+     * @return bool
+     */
+    protected function containsArraysOnly(array $data)
+    {
+        foreach ($data as $datum) {
+            if (! is_array($datum)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
