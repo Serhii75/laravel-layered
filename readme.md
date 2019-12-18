@@ -1,10 +1,20 @@
 # Package for using layered structure in Laravel.
 
+This is an open source Laravel package which is intended primarily for those developers who uses the layered structure, like:
+
+`model - repository - service - controller`
+
+or
+
+`model - service - controller`.
+
+Actually, the package allows to create any classes, interfaces, traits that you want. 
+
 ## Features
 - list of new artisan make commands: class, trait, contract, repository, service, layered-bunch
 - almost every command (except trait) has options
-- publish Generic folder with abstract classes (or generate?)
-- publish Contracts with RepositoryInterface and ServiceInterface (or generate?)
+- you can inherit abstract package classes, but if that doesn't suit you, you can create your base classes and inherit them
+- the same is about interfaces - you can implement or extend the provided interfaces or write your own base interfaces
 
 ## Installation
 
@@ -12,7 +22,13 @@
 composer require sidev/laravel-layered
 ```
 
-## Artisan commands
+Package will use its own base repository and service classes and interfaces, but if you want to use yours, publish package config by running command:  
+
+`php artisan vendor:publish --provider="SiDev\LaravelLayered\LayeredServiceProvider"`
+
+and redefine their paths.
+
+## Artisan commands and usage
 
 ### make:contract
 
@@ -29,43 +45,10 @@ creates a contract that extends another specified contract
 
 #### Examples
 
-1. Create a contract 
-
-    ```bash
-    php artisan make:contract ProductRepositoryInterface
-    ```
-    
-    Result:
-    
-    ```php
-    <?php
-    
-    namespace App\Contracts;
-    
-    interface ProductRepositoryInterface
-    {
-        //
-    }
-    ```
-
-2. Create a contract that extends another specified contract
-
-    ```bash
-    php artisan make:contract ProductRepositoryInterface --extends=RepositoryInterface
-    ```
-    
-    Result:
-    
-    ```php
-    <?php
-    
-    namespace App\Contracts;
-    
-    interface ProductRepositoryInterface extends RepositoryInterface
-    {
-        //
-    }
-    ```
+```bash
+php artisan make:contract ProductInterface
+php artisan make:contract ProductInterface --extends=AdapterInterface
+```
 
 ### make:class
 
@@ -91,122 +74,108 @@ this option can only be used with the `dependency` option. Used if you want to n
 
 #### Examples
 
-1. Create a class with contract 
+```bash
+php artisan make:class Adapters/DocumentAdapter
+php artisan make:class Adapters/DocumentAdapter -c
+php artisan make:class Adapters/DocumentAdapter -c -dDocument
+php artisan make:class Adapters/DocumentAdapter  --dependency=DocumentInterface --dependencyName=document
+```
 
-    ```bash
-    php artisan make:class Adapters/DocumentAdapter -c
-    ```
+### make:repository
 
-    Result:
+creates a repository with the specified name. It also allows to extends base repository class, create and implement contract, inject the specified model.
 
-    ```php
-    <?php
-    
-    namespace App\Contracts\Adapters;
-    
-    interface DocumentAdapterInterface
-    {
-        //
-    }
-    ```
+**Options**
 
-    ```php
-    <?php
-    
-    namespace App\Adapters;
-    
-    use App\Contracts\Adapters\DocumentAdapterInterface;
-    
-    class DocumentAdapter implements DocumentAdapterInterface
-    {
-        /**
-         * DocumentAdapter constructor.
-         */
-        public function __construct()
-        {
-            //
-        }
-    }
-    ```
+```bash
+-e, --extends[=EXTENDS]
+```
 
-2. Create a class with injected dependency and interface
-    ```bash
-    php artisan make:class Adapters/DocumentAdapter -c -dDocument
-    ```
-    
-    Result:
-    ```php
-    <?php
-    
-    namespace App\Contracts\Adapters;
-    
-    interface DocumentAdapterInterface
-    {
-        //
-    }
-    ```
-    
-    ```php
-    <?php
-    
-    namespace App\Adapters;
-    
-    use App\Document;
-    use App\Contracts\Adapters\DocumentAdapterInterface;
-    
-    class DocumentAdapter implements DocumentAdapterInterface
-    {
-        /**
-         * @var Document
-         */
-        protected $document;
-    
-        /**
-         * DocumentAdapter constructor.
-         *
-         * @param Document $document
-         */
-        public function __construct(Document $document)
-        {
-            $this->document = $document;
-        }
-    }
-    
-    ```
+extends the specified class. If the name of the class to extend is not defined, it extends the base repository class that defined in package config.
 
-3. Create a class with custom named injected dependency variable
+```bash
+-m, --model=MODEL
+```
 
-    ```bash
-    php artisan make:class Adapters/DocumentAdapter  --dependency=DocumentInterface --dependencyName=document
-    ```
-    
-    Result:
-    
-    ```php
-    <?php
-    
-    namespace App\Adapters;
-    
-    use App\DocumentInterface;
-    
-    class DocumentAdapter
-    {
-        /**
-         * @var DocumentInterface
-         */
-        protected $document;
-    
-        /**
-         * DocumentAdapter constructor.
-         *
-         * @param DocumentInterface $document
-         */
-        public function __construct(DocumentInterface $document)
-        {
-            $this->document = $document;
-        }
-    }
-    ```
+inject the model you specify. **Note**: the model will not be created, you should create it with appropriate command or manually.
+
+```bash
+-c, --contract
+```
+
+creates and implements the contract for the repository class
+
+> All repositories will be placed in the directory `App\Repositories`. All contracts you can find in the folder `App\Contracts\Repositories`.
+
+#### Examples
+
+```bash
+php artisan make:repository ProductRepository
+php artisan make:repository ProductRepository -c -e
+php artisan make:repository ProductRepository -c -e
+php artisan make:repository ProductRepository -c -e --model=Product
+```
+
+### make:service
+
+creates service class in the `App\Services` folder. Also you can inject repository or model, extends base service class, implement contract.
+
+**Options**
+
+```bash
+-e, --extends[=EXTENDS]
+```
+
+extends the specified class. If the name of the class to extend is not defined, it extends the base service class that defined in package config.
+
+```bash
+-r, --repository[=REPOSITORY]
+```
+
+injects repository class or interface. 
+
+```bash
+-m, --model[=MODEL]
+```
+
+injects the specified model.
+
+> **Notice**: you can use either the repository or the model, but not both options together. 
+
+```bash
+-c, --contract
+```
+
+creates and implements the contract for the service class
+
+#### Examples
+
+```bash
+php artisan make:service ProductService
+php artisan make:service ProductService --model=Product
+php artisan make:service ProductService -c
+php artisan make:service ProductService -c -e
+php artisan make:service ProductService -c -e --repository=ProductRepository
+```
+
+### make:layered-bunch
+
+creates bunch of classes for layered structure. As the result the next ones will be created:
+- model
+- factory
+- migration
+- repository contract that extends base repository contract
+- repository class that extends base repository class and implements the contract that was created on the previous step. Also model will be injected in this class
+- service contract that extends base service contract
+- service class that extends base service class and implements the contract created on the previous step. Also repository contract will be injected
+
+> **Notice** this command only creates contracts and classes, but does not bind abstract to concrete implementation. You should do it manually in AppServiceProvider or other service provider!
+
+#### Examples
+
+```bash
+php artisan make:layered-bunch Product
+```
 
 ### make:trait
 
@@ -214,24 +183,9 @@ creates a trait with the specified name. There is no custom options for this com
 
 #### Examples
 
-1. Create a trait
-
-    ```bash
-    php artisan make:trait Taggable
-    ```
-    
-    Result:
-    
-    ```php
-    <?php
-    
-    namespace App\Traits;
-    
-    trait Taggable
-    {
-        //
-    }
-    ```
+```bash
+php artisan make:trait Taggable
+```
 
 
 ## License
