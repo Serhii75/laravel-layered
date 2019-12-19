@@ -22,11 +22,11 @@ Actually, the package allows to create any classes, interfaces, traits that you 
 composer require sidev/laravel-layered
 ```
 
-Package will use its own base repository and service classes and interfaces, but if you want to use yours, publish package config by running command:  
+Then run command:  
 
 `php artisan vendor:publish --provider="SiDev\LaravelLayered\LayeredServiceProvider"`
 
-and redefine their paths.
+> Package will use its own base repository and service classes and interfaces, but if you want to use yours, you can redefine them in config/layered.php.
 
 ## Artisan commands and usage
 

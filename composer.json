@@ -1,6 +1,6 @@
 {
-    "name": "sidev/laravel-layered",
-    "description": "Package for using layered sturcture in Laravel.",
+    "name": "si-dev/laravel-layered",
+    "description": "Package for using layered structure in Laravel.",
     "keywords": [
         "laravel layered structure",
         "laravel layered architecture",
