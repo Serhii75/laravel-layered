@@ -23,19 +23,19 @@ interface ServiceInterface
     /**
      * Update the specified resource.
      *
-     * @param int   $id
+     * @param mixed  $id
      * @param array $attributes
      *
      * @return mixed
      */
-    public function update(int $id, array $attributes);
+    public function update($id, array $attributes);
 
     /**
      * Destroy the specified resource.
      *
-     * @param int $id
+     * @param mixed $id
      *
      * @return mixed
      */
-    public function delete(int $id);
+    public function delete($id);
 }

@@ -47,12 +47,12 @@ abstract class AbstractService implements ServiceInterface
     /**
      * Update the specified resource.
      *
-     * @param int   $id
+     * @param mixed $id
      * @param array $attributes
      *
      * @return mixed
      */
-    public function update(int $id, array $attributes)
+    public function update($id, array $attributes)
     {
         return $this->repository->update($id, $attributes);
     }
@@ -60,11 +60,11 @@ abstract class AbstractService implements ServiceInterface
     /**
      * Destroy the specified resource.
      *
-     * @param int $id
+     * @param mixed $id
      *
      * @return mixed
      */
-    public function delete(int $id)
+    public function delete($id)
     {
         $this->repository->delete($id);
     }
