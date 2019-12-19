@@ -47,9 +47,9 @@ class LayeredBunchMakeCommand extends GeneratorCommand
         $model = Str::studly(class_basename($this->argument('name')));
 
         $this->call('make:model', [
-            'name' => $model,
+            'name'        => $model,
             '--migration' => null,
-            '--factory' => null,
+            '--factory'   => null,
         ]);
     }
 
@@ -58,10 +58,10 @@ class LayeredBunchMakeCommand extends GeneratorCommand
         $model = Str::studly(class_basename($this->argument('name')));
 
         $this->call('make:repository', [
-            'name' => "{$model}Repository",
-            '--model' => $model,
+            'name'       => "{$model}Repository",
+            '--model'    => $model,
             '--contract' => null,
-            '--extends' => null,
+            '--extends'  => null,
         ]);
     }
 
@@ -70,10 +70,10 @@ class LayeredBunchMakeCommand extends GeneratorCommand
         $model = Str::studly(class_basename($this->argument('name')));
 
         $this->call('make:service', [
-            'name' => "{$model}Service",
+            'name'         => "{$model}Service",
             '--repository' => "{$model}RepositoryInterface",
-            '--contract' => null,
-            '--extends' => null,
+            '--contract'   => null,
+            '--extends'    => null,
         ]);
     }
 

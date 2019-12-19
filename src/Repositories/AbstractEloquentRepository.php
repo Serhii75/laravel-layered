@@ -25,7 +25,7 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Get collection of the resource.
      *
-     * @param  array  $columns
+     * @param array $columns
      *
      * @return mixed
      */
@@ -37,8 +37,8 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Find a resource by its primary key.
      *
-     * @param  mixed  $id
-     * @param  array  $columns
+     * @param mixed $id
+     * @param array $columns
      *
      * @return mixed
      */
@@ -50,8 +50,8 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Get collection of resources by the specified condition(s).
      *
-     * @param  array  $where
-     * @param  array  $columns
+     * @param array $where
+     * @param array $columns
      *
      * @return mixed
      */
@@ -63,8 +63,8 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Get a resource by the specified condition(s).
      *
-     * @param  array  $where
-     * @param  array  $columns
+     * @param array $where
+     * @param array $columns
      *
      * @return mixed
      */
@@ -76,7 +76,7 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Store a newly created resource.
      *
-     * @param  array  $attributes
+     * @param array $attributes
      *
      * @return Model
      */
@@ -88,8 +88,8 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Update the specified resource.
      *
-     * @param  mixed  $id
-     * @param  array  $attributes
+     * @param mixed $id
+     * @param array $attributes
      *
      * @return Model
      */
@@ -103,8 +103,8 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Update resources by the specified condition(s).
      *
-     * @param  array  $where
-     * @param  array  $attributes
+     * @param array $where
+     * @param array $attributes
      *
      * @return mixed
      */
@@ -118,7 +118,7 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Delete the specified resource.
      *
-     * @param  mixed  $id
+     * @param mixed $id
      */
     public function delete($id)
     {
@@ -128,7 +128,7 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Delete resources by the specified condition(s).
      *
-     * @param  array  $where
+     * @param array $where
      *
      * @return mixed
      */
@@ -151,7 +151,7 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Apply 'where' condition(s) to the model.
      *
-     * @param  array  $where
+     * @param array $where
      *
      * @return mixed
      */
@@ -165,14 +165,14 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Cehck whether all elements are arrays.
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return bool
      */
     protected function containsArraysOnly(array $data)
     {
         foreach ($data as $datum) {
-            if (! is_array($datum)) {
+            if (!is_array($datum)) {
                 return false;
             }
         }

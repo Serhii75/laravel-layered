@@ -83,14 +83,14 @@ class ServiceMakeCommand extends GeneratorCommand
 
         if ($model = $this->option('model')) {
             $params = array_merge($params, [
-                '--dependency' => $model,
+                '--dependency'     => $model,
                 '--dependencyName' => 'model',
             ]);
         }
 
         if ($repository = $this->option('repository')) {
             $params = array_merge($params, [
-                '--dependency' => $this->getRepositoryNamespace($repository),
+                '--dependency'     => $this->getRepositoryNamespace($repository),
                 '--dependencyName' => 'repository',
             ]);
         }
@@ -134,7 +134,7 @@ class ServiceMakeCommand extends GeneratorCommand
         $this->contract = 'Services\\'.Str::studly(class_basename($this->argument('name'))).'Interface';
 
         $this->call('make:contract', [
-            'name' => $this->contract,
+            'name'      => $this->contract,
             '--extends' => config('layered.service.contract'),
         ]);
     }

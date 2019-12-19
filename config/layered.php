@@ -15,7 +15,7 @@ return [
     */
     'repository' => [
         'base_class' => SiDev\LaravelLayered\Repositories\AbstractEloquentRepository::class,
-        'contract' => SiDev\LaravelLayered\Contracts\Repositories\RepositoryInterface::class,
+        'contract'   => SiDev\LaravelLayered\Contracts\Repositories\RepositoryInterface::class,
     ],
 
     /*
@@ -32,6 +32,6 @@ return [
     */
     'service' => [
         'base_class' => SiDev\LaravelLayered\Services\AbstractService::class,
-        'contract' => SiDev\LaravelLayered\Contracts\Services\ServiceInterface::class,
+        'contract'   => SiDev\LaravelLayered\Contracts\Services\ServiceInterface::class,
     ],
 ];

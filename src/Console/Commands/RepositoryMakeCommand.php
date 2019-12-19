@@ -77,7 +77,7 @@ class RepositoryMakeCommand extends GeneratorCommand
 
         if ($model = $this->option('model')) {
             $params = array_merge($params, [
-                '--dependency' => $model,
+                '--dependency'     => $model,
                 '--dependencyName' => 'model',
             ]);
         }
@@ -121,7 +121,7 @@ class RepositoryMakeCommand extends GeneratorCommand
         $this->contract = 'Repositories\\'.Str::studly(class_basename($this->argument('name'))).'Interface';
 
         $this->call('make:contract', [
-            'name' => $this->contract,
+            'name'      => $this->contract,
             '--extends' => config('layered.repository.contract'),
         ]);
     }

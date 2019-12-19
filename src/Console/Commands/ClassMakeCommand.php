@@ -282,7 +282,7 @@ class ClassMakeCommand extends GeneratorCommand
             ? $this->qualifyClass('Contracts\\'.$this->option('contract'))
             : $this->qualifyClass('Contracts\\'.$this->argument('name').'Interface');
 
-        if (! interface_exists($namespace)) {
+        if (!interface_exists($namespace)) {
             $this->createContract($namespace);
         }
 

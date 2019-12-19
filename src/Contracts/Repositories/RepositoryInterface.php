@@ -7,17 +7,17 @@ interface RepositoryInterface
     /**
      * Get collection of resources.
      *
-     * @param  array|mixed  $columns
+     * @param array|mixed $columns
      *
-     * @return  mixed
+     * @return mixed
      */
     public function get($columns = ['*']);
 
     /**
      * Find a resource by its primary key.
      *
-     * @param  mixed  $id
-     * @param  array  $columns
+     * @param mixed $id
+     * @param array $columns
      *
      * @return mixed
      */
@@ -26,8 +26,8 @@ interface RepositoryInterface
     /**
      * Get collection of resources by the specified condition(s).
      *
-     * @param  array  $where
-     * @param  array  $columns
+     * @param array $where
+     * @param array $columns
      *
      * @return mixed
      */
@@ -36,8 +36,8 @@ interface RepositoryInterface
     /**
      * Get a resource by the specified condition(s).
      *
-     * @param  array  $where
-     * @param  array  $columns
+     * @param array $where
+     * @param array $columns
      *
      * @return mixed
      */
@@ -46,17 +46,17 @@ interface RepositoryInterface
     /**
      * Store a newly created resource.
      *
-     * @param  array $attributes
+     * @param array $attributes
      *
-     * @return  mixed
+     * @return mixed
      */
     public function create(array $attributes);
 
     /**
      * Update the specified resource.
      *
-     * @param  mixed  $id
-     * @param  array  $attributes
+     * @param mixed $id
+     * @param array $attributes
      *
      * @return mixed
      */
@@ -65,8 +65,8 @@ interface RepositoryInterface
     /**
      * Update resources by the specified condition(s).
      *
-     * @param  array  $where
-     * @param  array  $attributes
+     * @param array $where
+     * @param array $attributes
      *
      * @return mixed
      */
@@ -75,16 +75,16 @@ interface RepositoryInterface
     /**
      * Delete the specified resource.
      *
-     * @param  mixed  $id
+     * @param mixed $id
      *
-     * @return  mixed
+     * @return mixed
      */
     public function delete($id);
 
     /**
      * Delete resources by the specified condition(s).
      *
-     * @param  array  $where
+     * @param array $where
      *
      * @return mixed
      */
