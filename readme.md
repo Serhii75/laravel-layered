@@ -19,7 +19,7 @@ Actually, the package allows to create any classes, interfaces, traits that you 
 ## Installation
 
 ```bash
-composer require sidev/laravel-layered
+composer require si-dev/laravel-layered
 ```
 
 Then run command:  
