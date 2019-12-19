@@ -2,8 +2,8 @@
 
 namespace SiDev\LaravelLayered\Services;
 
-use SiDev\LaravelLayered\Contracts\Services\ServiceInterface;
 use SiDev\LaravelLayered\Contracts\Repositories\RepositoryInterface;
+use SiDev\LaravelLayered\Contracts\Services\ServiceInterface;
 
 abstract class AbstractService implements ServiceInterface
 {

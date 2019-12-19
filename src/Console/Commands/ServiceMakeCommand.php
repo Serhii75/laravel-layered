@@ -2,11 +2,10 @@
 
 namespace SiDev\LaravelLayered\Console\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\GeneratorCommand;
-use Symfony\Component\Console\Input\InputOption;
+use Illuminate\Support\Str;
 use SiDev\LaravelLayered\Traits\Commands\SortableImport;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Symfony\Component\Console\Input\InputOption;
 
 class ServiceMakeCommand extends GeneratorCommand
 {
