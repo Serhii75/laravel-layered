@@ -112,10 +112,24 @@ creates and implements the contract for the repository class
 
 ```bash
 php artisan make:repository ProductRepository
-php artisan make:repository ProductRepository -c -e
+php artisan make:repository ProductRepository -c
 php artisan make:repository ProductRepository -c -e
 php artisan make:repository ProductRepository -c -e --model=Product
 ```
+
+Base repository interface and class contain the next methods:
+- get($columns = ['*'])
+- find($id, array $columns = ['*'])
+- findWhere(array $where, array $columns = ['*'])
+- firstWhere(array $where, $columns = ['*'])
+- create(array $attributes)
+- update($id, array $attributes)
+- updateWhere(array $where, array $attributes)
+- delete($id)
+- deleteWhere(array $where)
+
+In addtition base repository class has magic `__call` method. So you can use any Eloquent model method you need. 
+
 
 ### make:service
 
