@@ -2,8 +2,6 @@
 
 namespace SiDev\LaravelLayered\Contracts\Repositories;
 
-use Illuminate\Database\Eloquent\Model;
-
 interface RepositoryInterface
 {
     /**
