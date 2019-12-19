@@ -1,5 +1,5 @@
 # Package for using layered structure in Laravel.
-[![StyleCI](https://github.styleci.io/repos/228944265/shield?branch=master)](https://github.styleci.io/repos/228944265)
+[![StyleCI](https://github.styleci.io/repos/228944265/shield?branch=master)](https://github.styleci.io/repos/228944265) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This is an open source Laravel package which is intended primarily for those developers who uses the layered structure, like:
 
